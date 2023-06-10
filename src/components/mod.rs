@@ -1,11 +1,3 @@
-mod content;
-mod heading;
-mod link;
-mod page;
-mod title;
+mod base;
 
-pub use content::Content;
-pub use heading::Heading;
-pub use link::Link;
-pub use page::Page;
-pub use title::Title;
+pub use base::*;
