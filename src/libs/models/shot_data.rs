@@ -1,4 +1,4 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct ShotData {
     pub version: String,
     pub clock: usize,
@@ -13,13 +13,13 @@ pub struct ShotData {
     pub state_change: Vec<f32>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct PressureSection {
     pub pressure: Vec<f32>,
     pub goal: Vec<f32>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct FlowSection {
     pub flow: Vec<f32>,
     pub by_weight: Vec<f32>,
@@ -27,20 +27,20 @@ pub struct FlowSection {
     pub goal: Vec<f32>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct TemperatureSection {
     pub basket: Vec<f32>,
     pub mix: Vec<f32>,
     pub goal: Vec<f32>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct TotalsSection {
     pub weight: Vec<f32>,
     pub water_dispensed: Vec<f32>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct ResistanceSection {
     pub resistance: Vec<f32>,
     pub by_weight: Vec<f32>,
