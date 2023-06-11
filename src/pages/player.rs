@@ -1,4 +1,4 @@
-use crate::components::{Chart, Content, Heading};
+use crate::components::{Chart, Content, Graph, Heading};
 use crate::prelude::*;
 
 pub struct PlayerPage;
@@ -16,7 +16,7 @@ impl Component for PlayerPage {
             <Page title="Player">
                 <Heading>{ "Player" }</Heading>
                 <Content>
-                    <Chart />
+                    <Graph />
                 </Content>
             </Page>
         }
