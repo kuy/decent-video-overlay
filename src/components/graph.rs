@@ -1,5 +1,9 @@
+use std::rc::Rc;
+
 use gloo::timers::callback::Interval;
 
+use crate::libs::models::ChartData;
+use crate::libs::Range;
 use crate::prelude::*;
 use crate::{
     components::Chart,
@@ -69,6 +73,8 @@ pub struct Graph {
     state: State,
     handle: Option<Interval>,
     data: ShotData,
+    time_span: Range,
+    pressure_data: Rc<ChartData>,
 }
 
 pub const INNER: (f32, f32) = (800.0, 450.0);
@@ -102,11 +108,15 @@ impl Component for Graph {
 
     fn create(_: &Context<Self>) -> Self {
         let data: ShotData = serde_json::from_str::<ShotDataJson>(SHOT1).unwrap().into();
+        let time_span = Range::from_series(&data.elapsed);
+        let pressure_data = Rc::new(ChartData::for_pressure(&data));
 
         Self {
             state: State::Stopped,
             handle: None,
             data,
+            time_span,
+            pressure_data,
         }
     }
 
@@ -158,7 +168,7 @@ impl Component for Graph {
                     <span>{ self.render_timer() }</span>
                 </div>
                 <div>
-                    <Chart elapsed={self.elapsed_or_zero()} />
+                    <Chart data={self.pressure_data.clone()} time_span={self.time_span.clone()} elapsed={self.elapsed_or_zero()} />
                 </div>
             </>
         }

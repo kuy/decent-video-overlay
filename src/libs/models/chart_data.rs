@@ -1,13 +1,13 @@
 use crate::libs::{models::ShotData, Range};
 
 #[derive(Debug, PartialEq)]
-pub struct PressureData {
+pub struct ChartData {
     pub series: Vec<DataPoint>,
     pub range: Range,
 }
 
-impl PressureData {
-    pub fn from_shot_data(data: &ShotData) -> Self {
+impl ChartData {
+    pub fn for_pressure(data: &ShotData) -> Self {
         let mut series = vec![];
         for (t, v) in data.elapsed.iter().zip(data.pressure.pressure.iter()) {
             series.push(DataPoint::Present((*t, *v)));
@@ -15,6 +15,17 @@ impl PressureData {
         Self {
             series,
             range: Range::from_series(&data.pressure.pressure),
+        }
+    }
+
+    pub fn for_temp_basket(data: &ShotData) -> Self {
+        let mut series = vec![];
+        for (t, v) in data.elapsed.iter().zip(data.temperature.basket.iter()) {
+            series.push(DataPoint::Present((*t, *v)));
+        }
+        Self {
+            series,
+            range: Range::from_series(&data.temperature.basket),
         }
     }
 }
@@ -41,7 +52,7 @@ mod tests {
     use crate::libs::models::PressureSection;
 
     #[test]
-    fn test_pressure_data_from_shot_data() {
+    fn test_chart_data_for_pressure() {
         let data = ShotData {
             elapsed: vec![0.0, 0.044, 0.268],
             pressure: PressureSection {
@@ -50,8 +61,8 @@ mod tests {
             },
             ..Default::default()
         };
-        let actual = PressureData::from_shot_data(&data);
-        let expected = PressureData {
+        let actual = ChartData::for_pressure(&data);
+        let expected = ChartData {
             series: vec![
                 DataPoint::Present((0.0, 0.0)),
                 DataPoint::Present((0.044, 0.03)),
