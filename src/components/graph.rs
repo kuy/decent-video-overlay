@@ -2,14 +2,13 @@ use std::rc::Rc;
 
 use gloo::timers::callback::Interval;
 
-use crate::libs::models::ChartData;
 use crate::libs::Range;
 use crate::prelude::*;
 use crate::{
     components::Chart,
     libs::models::{
-        json::{ShotDataJson, SHOT1},
-        ShotData,
+        json::{ShotDataJson, SHOT2},
+        ChartData, ShotData,
     },
 };
 
@@ -75,9 +74,13 @@ pub struct Graph {
     data: ShotData,
     time_span: Range,
     pressure_data: Rc<ChartData>,
+    temp_basket_data: Rc<ChartData>,
+    temp_mix_data: Rc<ChartData>,
+    flow_data: Rc<ChartData>,
+    flow_by_weight_data: Rc<ChartData>,
 }
 
-pub const INNER: (f32, f32) = (800.0, 450.0);
+pub const INNER: (f32, f32) = (400.0, 660.0);
 const TIMER_DURATION: u32 = 75;
 
 impl Graph {
@@ -85,7 +88,7 @@ impl Graph {
         matches!(self.state, State::Playing(_))
     }
 
-    fn elapsed_or_zero(&self) -> f64 {
+    fn elapsed(&self) -> f64 {
         match &self.state {
             State::Stopped => 0.0,
             State::Playing(ts) => ts.elapsed,
@@ -107,9 +110,13 @@ impl Component for Graph {
     type Properties = ();
 
     fn create(_: &Context<Self>) -> Self {
-        let data: ShotData = serde_json::from_str::<ShotDataJson>(SHOT1).unwrap().into();
+        let data: ShotData = serde_json::from_str::<ShotDataJson>(SHOT2).unwrap().into();
         let time_span = Range::from_series(&data.elapsed);
-        let pressure_data = Rc::new(ChartData::for_pressure(&data));
+        let pressure_data = Rc::new(ChartData::pressure(&data));
+        let temp_basket_data = Rc::new(ChartData::temp_basket(&data));
+        let temp_mix_data = Rc::new(ChartData::temp_mix(&data));
+        let flow_data = Rc::new(ChartData::flow(&data));
+        let flow_by_weight_data = Rc::new(ChartData::flow_by_weight(&data));
 
         Self {
             state: State::Stopped,
@@ -117,6 +124,10 @@ impl Component for Graph {
             data,
             time_span,
             pressure_data,
+            temp_basket_data,
+            temp_mix_data,
+            flow_data,
+            flow_by_weight_data,
         }
     }
 
@@ -167,8 +178,24 @@ impl Component for Graph {
                     <button onclick={ctx.link().callback(|_| Msg::Stop)}>{ "Stop" }</button>
                     <span>{ self.render_timer() }</span>
                 </div>
-                <div>
-                    <Chart data={self.pressure_data.clone()} time_span={self.time_span.clone()} elapsed={self.elapsed_or_zero()} />
+                <div class={css!(r#"
+                    position: relative;
+                "#)}>
+                    <video controls=true width="400">
+                        <source src="http://localhost:8888/shot2.mp4" type="video/mp4" />
+                    </video>
+                    <div class={css!(r#"
+                        position: absolute;
+                        top: 0;
+                    "#)}>
+                        <svg width={ format!("{}", INNER.0) } height={ format!("{}", INNER.1) } viewBox={ format!("0 0 {} {}", INNER.0, INNER.1) } xmlns="http://www.w3.org/2000/svg">
+                            <Chart color="darkgreen" data={self.pressure_data.clone()} time_span={self.time_span.clone()} elapsed={self.elapsed()} data_codomain={(565.0, 305.0)} />
+                            <Chart color="darkred" data={self.temp_basket_data.clone()} time_span={self.time_span.clone()} elapsed={self.elapsed()} data_codomain={(645.0, 585.0)} />
+                            <Chart color="red" data={self.temp_mix_data.clone()} time_span={self.time_span.clone()} elapsed={self.elapsed()} data_codomain={(645.0, 585.0)} />
+                            <Chart color="#1f77ea" data={self.flow_data.clone()} time_span={self.time_span.clone()} elapsed={self.elapsed()} data_codomain={(565.0, 465.0)} />
+                            <Chart color="#8f6400" data={self.flow_by_weight_data.clone()} time_span={self.time_span.clone()} elapsed={self.elapsed()} data_codomain={(565.0, 465.0)} />
+                        </svg>
+                    </div>
                 </div>
             </>
         }

@@ -7,7 +7,7 @@ pub struct ChartData {
 }
 
 impl ChartData {
-    pub fn for_pressure(data: &ShotData) -> Self {
+    pub fn pressure(data: &ShotData) -> Self {
         let mut series = vec![];
         for (t, v) in data.elapsed.iter().zip(data.pressure.pressure.iter()) {
             series.push(DataPoint::Present((*t, *v)));
@@ -18,7 +18,7 @@ impl ChartData {
         }
     }
 
-    pub fn for_temp_basket(data: &ShotData) -> Self {
+    pub fn temp_basket(data: &ShotData) -> Self {
         let mut series = vec![];
         for (t, v) in data.elapsed.iter().zip(data.temperature.basket.iter()) {
             series.push(DataPoint::Present((*t, *v)));
@@ -26,6 +26,39 @@ impl ChartData {
         Self {
             series,
             range: Range::from_series(&data.temperature.basket),
+        }
+    }
+
+    pub fn temp_mix(data: &ShotData) -> Self {
+        let mut series = vec![];
+        for (t, v) in data.elapsed.iter().zip(data.temperature.mix.iter()) {
+            series.push(DataPoint::Present((*t, *v)));
+        }
+        Self {
+            series,
+            range: Range::from_series(&data.temperature.mix),
+        }
+    }
+
+    pub fn flow(data: &ShotData) -> Self {
+        let mut series = vec![];
+        for (t, v) in data.elapsed.iter().zip(data.flow.flow.iter()) {
+            series.push(DataPoint::Present((*t, *v)));
+        }
+        Self {
+            series,
+            range: Range::from_series(&data.flow.flow),
+        }
+    }
+
+    pub fn flow_by_weight(data: &ShotData) -> Self {
+        let mut series = vec![];
+        for (t, v) in data.elapsed.iter().zip(data.flow.by_weight.iter()) {
+            series.push(DataPoint::Present((*t, *v)));
+        }
+        Self {
+            series,
+            range: Range::from_series(&data.flow.by_weight),
         }
     }
 }
@@ -61,7 +94,7 @@ mod tests {
             },
             ..Default::default()
         };
-        let actual = ChartData::for_pressure(&data);
+        let actual = ChartData::pressure(&data);
         let expected = ChartData {
             series: vec![
                 DataPoint::Present((0.0, 0.0)),
