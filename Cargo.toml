@@ -10,7 +10,7 @@ categories = ["gui", "wasm", "web-programming"]
 
 [dependencies]
 gloo = "0.8"
-gloo-utils = "0.1.6"
+gloo-utils = "0.1.7"
 js-sys = "0.3.64"
 log = "0.4.19"
 serde = { version = "1.0.164", features = ["derive"] }
