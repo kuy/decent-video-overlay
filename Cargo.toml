@@ -9,7 +9,7 @@ keywords = ["yew", "trunk"]
 categories = ["gui", "wasm", "web-programming"]
 
 [dependencies]
-gloo = "0.9"
+gloo = "0.10"
 gloo-utils = "0.1.7"
 js-sys = "0.3.64"
 log = "0.4.19"
