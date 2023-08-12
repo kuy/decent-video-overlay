@@ -12,7 +12,7 @@ categories = ["gui", "wasm", "web-programming"]
 gloo = "0.9"
 gloo-utils = "0.1.7"
 js-sys = "0.3.64"
-log = "0.4.19"
+log = "0.4.20"
 serde = { version = "1.0.180", features = ["derive"] }
 serde_json = "1.0.103"
 stylist = { version = "0.12.1", features = ["yew"] }
