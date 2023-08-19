@@ -62,7 +62,7 @@ name = "decent-video-overlay"
 version = "0.1.0"
 dependencies = [
  "gloo 0.10.0",
- "gloo-utils 0.1.7",
+ "gloo-utils 0.2.0",
  "js-sys",
  "log",
  "serde",
