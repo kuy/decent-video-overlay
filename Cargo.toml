@@ -17,5 +17,5 @@ serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"
 stylist = { version = "0.12.1", features = ["yew"] }
 wasm-logger = "0.2.0"
-yew = { version="0.20.0", features=["csr"] }
+yew = { version="0.21.0", features=["csr"] }
 yew-router = "0.17.0"
